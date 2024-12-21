@@ -1,5 +1,6 @@
 QT += quick opengl
 CONFIG += c++17
+CONFIG += gl
 LIBS += -lopengl32
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
