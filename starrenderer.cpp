@@ -1,8 +1,13 @@
 #include "StarRenderer.h"
+#include <QDebug>
 
 StarRenderer::StarRenderer() {
     initializeOpenGLFunctions();  // Initialize OpenGL functions from QOpenGLFunctions
     initializeOpenGL();
+    // Query OpenGL version and renderer
+    qDebug() << "OpenGL Version: " << (const char*)glGetString(GL_VERSION);
+    qDebug() << "OpenGL Renderer: " << (const char*)glGetString(GL_RENDERER);
+    qDebug() << "123";
 }
 
 StarRenderer::~StarRenderer() {
@@ -13,16 +18,29 @@ StarRenderer::~StarRenderer() {
 
 void StarRenderer::initializeOpenGL() {
     initializeShaders();
+    // Query OpenGL version and renderer
+    qDebug() << "OpenGL Version: " << (const char*)glGetString(GL_VERSION);
+    qDebug() << "OpenGL Renderer: " << (const char*)glGetString(GL_RENDERER);
     static const GLfloat starVertices[] = {
-        0.0f,  1.0f, 0.0f,  // Top point
-        -0.5f,  0.3f, 0.0f, // Bottom-left inner point
-        -1.0f, -0.5f, 0.0f, // Bottom-left outer point
+        0.0f,  0.8f, 0.0f,   // Top point
+        -0.2f,  0.2f, 0.0f,  // Left inner point
+        -0.8f,  0.2f, 0.0f,  // Left outer point
 
-        0.0f,  1.0f, 0.0f,  // Top point
-        -1.0f, -0.5f, 0.0f, // Bottom-left outer point
-        0.5f, -0.5f, 0.0f,  // Bottom-right outer point
+        0.0f,  0.8f, 0.0f,   // Top point
+        -0.8f,  0.2f, 0.0f,  // Left outer point
+        -0.5f, -0.5f, 0.0f,  // Bottom-left point
 
-        // Add additional triangles to form the star shape
+        0.0f,  0.8f, 0.0f,   // Top point
+        -0.5f, -0.5f, 0.0f,  // Bottom-left point
+        0.5f, -0.5f, 0.0f,   // Bottom-right point
+
+        0.0f,  0.8f, 0.0f,   // Top point
+        0.5f, -0.5f, 0.0f,   // Bottom-right point
+        0.8f,  0.2f, 0.0f,   // Right outer point
+
+        0.0f,  0.8f, 0.0f,   // Top point
+        0.8f,  0.2f, 0.0f,   // Right outer point
+        0.2f,  0.2f, 0.0f    // Right inner point
     };
 
     // Use QOpenGLFunctions methods
@@ -47,8 +65,11 @@ void StarRenderer::initializeOpenGL() {
 
 void StarRenderer::render() {
     glViewport(0, 0, framebufferObject()->size().width(), framebufferObject()->size().height());
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // Clear color to black
+    glClear(GL_COLOR_BUFFER_BIT);  // Only clear the color buffer
+
+    // Enable depth test only if necessary
+    // glEnable(GL_DEPTH_TEST);
 
     QMatrix4x4 mvp;
     mvp.ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
@@ -69,6 +90,7 @@ void StarRenderer::render() {
 }
 
 
+
 QOpenGLFramebufferObject *StarRenderer::createFramebufferObject(const QSize &size) {
     QOpenGLFramebufferObjectFormat format;
     format.setAttachment(QOpenGLFramebufferObject::Depth);
@@ -77,9 +99,13 @@ QOpenGLFramebufferObject *StarRenderer::createFramebufferObject(const QSize &siz
 
 void StarRenderer::synchronize(QQuickFramebufferObject *item) {
     Q_UNUSED(item);
+    // Query OpenGL version and renderer
+    qDebug() << "OpenGL Version: " << (const char*)glGetString(GL_VERSION);
+    qDebug() << "OpenGL Renderer: " << (const char*)glGetString(GL_RENDERER);
 }
 void StarRenderer::drawStar() {
-    glDrawArrays(GL_TRIANGLES, 0, 12); // Adjust vertex count based on the star shape
+    glDisable(GL_DEPTH_TEST);
+    glDrawArrays(GL_TRIANGLES, 0, 15); // Adjust vertex count based on the star shape
 }
 bool StarRenderer::initializeShaders() {
     bool success = m_shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/star.vert");
