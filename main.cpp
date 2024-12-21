@@ -1,22 +1,17 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include "Star3DItem.h"  // Inclure Star3DItem
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    // Enregistrer Star3DItem pour QML
+    qmlRegisterType<Star3DItem>("CustomShapes", 1, 0, "Star3DItem");
+
+
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/sans_titre10/main.qml"));
-    QObject::connect(
-        &engine,
-        &QQmlApplicationEngine::objectCreated,
-        &app,
-        [url](QObject *obj, const QUrl &objUrl) {
-            if (!obj && url == objUrl)
-                QCoreApplication::exit(-1);
-        },
-        Qt::QueuedConnection);
-    engine.load(url);
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     return app.exec();
 }
