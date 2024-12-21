@@ -1,8 +1,15 @@
-import QtQuick
+import QtQuick 2.15
+import QtQuick.Controls 2.15 // Pour accéder à `ApplicationWindow`
+import CustomShapes 1.0
 
-Window {
+ApplicationWindow {
+    visible: true
     width: 640
     height: 480
-    visible: true
-    title: qsTr("Hello World")
+
+
+    Star3DItem {
+        width: 300
+        height: 300
+    }
 }
